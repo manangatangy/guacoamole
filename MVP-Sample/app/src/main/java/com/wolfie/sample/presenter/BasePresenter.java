@@ -1,18 +1,4 @@
-/**
- * (C) 2016. National Australia Bank [All rights reserved]. This product and related documentation are protected by
- * copyright restricting its use, copying, distribution, and decompilation. No part of this product or related
- * documentation may be reproduced in any form by any means without prior written authorization of National Australia
- * Bank. Unless otherwise arranged, third parties may not have access to this product or related documents.
- */
-
-package com.wolfie.sample.presenter;/**
- * (C) 2016. National Australia Bank [All rights reserved]. This product and related documentation
- * are protected by copyright restricting its use, copying, distribution, and decompilation. No part
- * of this product or related documentation may be reproduced in any form by any means without prior
- * written authorization of National Australia Bank. Unless otherwise arranged, third parties may
- * not have access to this product or related documents.
- */
-
+package com.wolfie.sample.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,12 +8,9 @@ import android.support.annotation.Nullable;
 import com.wolfie.sample.view.BaseUi;
 import com.wolfie.sample.view.activity.BaseActivity.KeyboardVisibility;
 
-/**
- * Created by David Weiss on 29/09/2016.
- */
 public abstract class BasePresenter<T extends BaseUi> implements Presenter {
 
-//    @Inject
+    // This field can be protected once the inject mechanism is completed (it should be @Inject)
     public T mUi;
 
     protected boolean mPaused;
@@ -36,14 +19,18 @@ public abstract class BasePresenter<T extends BaseUi> implements Presenter {
         return mUi;
     }
 
+    public BasePresenter(T ui) {
+        this.mUi = ui;
+    }
+
     @Override
     public boolean backPressed() {
-        return true;
+        return true;        // Means: not consumed here.
     }
 
     @Override
     public boolean homeAsUpPressed() {
-        return true;
+        return true;        // Means: not consumed here.
     }
 
     @Override
@@ -52,9 +39,7 @@ public abstract class BasePresenter<T extends BaseUi> implements Presenter {
     }
 
     /**
-     * Useful to check before activating a callback on the fragment if there is a chance that the activity has been
-     * paused, while waiting for the callback to complete.
-     *
+     * The frag may have been paused, while waiting for the callback to complete.
      * @return true if the associated fragment is in paused state.
      */
     protected boolean isPaused() {

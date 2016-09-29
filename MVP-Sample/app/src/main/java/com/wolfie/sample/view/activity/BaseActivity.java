@@ -11,7 +11,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import com.wolfie.sample.R;
 import com.wolfie.sample.presenter.Presenter;
 import com.wolfie.sample.view.fragment.BaseFragment;
 
@@ -19,21 +18,18 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by david on 28/09/16.
- */
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        inject();
+        // Inject would normally be called here
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // Without this method, the fragment.onSaveInstanceState() doesn't get called.
+        // Don't delete this method. It is needed so fragment.onSaveInstanceState() is called.
         super.onSaveInstanceState(outState);
     }
 
@@ -93,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             shouldPerformBackPressed = shouldPerformBackPressed & baseFragment.onBackPressed();
         }
         // If the back press isn't handled by any of the child fragments,
-        // then it is passed to the Activity's presented (if there is one).
+        // then it is passed to the Activity's presenter (if there is one).
         if (shouldPerformBackPressed) {
             if (getPresenter() != null) {
                 getPresenter().backPressed();
@@ -103,9 +99,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     @NonNull
     private KeyboardVisibility mKeyboardVisibility = KeyboardVisibility.GONE;
 
@@ -113,8 +106,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         VISIBLE, GONE, UNKNOWN
     }
 
-    // An OnGlobalLayoutListener to listen to layout changes
-    // and detect if a software keyboard is visible or not
     final ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
@@ -152,14 +143,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void addKeyboardVisibilityListener() {
-        final View activityRootView = getRootView();
+        final View activityRootView = getActivityRootView();
         if (activityRootView != null) {
             activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
         }
     }
 
     private void removeKeyboardVisibilityListener() {
-        final View activityRootView = getRootView();
+        final View activityRootView = getActivityRootView();
         if (activityRootView != null) {
             activityRootView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
         }
@@ -167,7 +158,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     int getActivityRootViewHeight() {
         int activityRootViewHeight = -1;
-        final View activityRootView = getRootView();
+        final View activityRootView = getActivityRootView();
         if (activityRootView != null) {
             Rect r = new Rect();
             //r will be populated with the coordinates of your view that area still visible.
@@ -177,12 +168,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return activityRootViewHeight;
     }
 
-    View getRootView() {
-        return findViewById(R.id.layout_activity_root);
-    }
+    public abstract View getActivityRootView();
 
-    private static int mWindowHeight = -1;          // window height, doesn't include buttons and status bar
-    private static int mApproxKeyboardViewHeight = -1; // assume it's 1/5th of the sWindowHeight
+    private static int mWindowHeight = -1;              // window height, doesn't include buttons and status bar
+    private static int mApproxKeyboardViewHeight = -1;  // assume it's 1/5th of the sWindowHeight
 
     int getApproxKeyboardViewHeight() {
         if (mWindowHeight <= 0 || mApproxKeyboardViewHeight <= 0) {

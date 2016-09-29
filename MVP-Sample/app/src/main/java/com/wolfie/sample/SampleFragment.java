@@ -9,15 +9,11 @@ import android.widget.TextView;
 
 import com.wolfie.sample.presenter.Presenter;
 import com.wolfie.sample.view.fragment.BaseFragment;
+import com.wolfie.sample.SamplePresenter.SampleUi;
 
 import butterknife.BindView;
 
-
-/**
- * Created by david on 28/09/16.
- */
-
-public class SampleFragment extends BaseFragment {
+public class SampleFragment extends BaseFragment implements SampleUi {
 
     @BindView(R.id.textview_hello)
     TextView mTextView;
@@ -31,8 +27,7 @@ public class SampleFragment extends BaseFragment {
     }
 
     public SampleFragment() {
-        mPresenter = new SamplePresenter();
-        mPresenter.mUi = this;
+        mPresenter = new SamplePresenter(this);
     }
 
     @Override
@@ -46,17 +41,6 @@ public class SampleFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mTextView.setText("Hello Wolfgang");
-//
-//        DaggerFactory.getMainComponent(getPokemonApp(), this)
-//                .inject(this);
-//
-//        initSwipeRefreshLayout();
-//        initAdapter();
-//        initRecyclerView();
-//
-//        if (adapter.getPokemonNames() == null) {
-//            presenter.getAllPokemonNames();
-//        }
     }
 
 }

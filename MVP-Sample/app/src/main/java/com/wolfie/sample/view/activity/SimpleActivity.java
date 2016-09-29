@@ -2,11 +2,12 @@ package com.wolfie.sample.view.activity;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
+import android.view.View;
 
 import com.wolfie.sample.R;
 
@@ -14,30 +15,36 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * Created by david on 28/09/16.
- */
-
 public abstract class SimpleActivity extends BaseActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.layout_activity_simple)
+    View mActivityRootView;
 
-    @BindView(R.id.fragment_container_activity)
-    FrameLayout fragmentContainer;
+    // Needed public by child frags
+    @BindView(R.id.toolbar)
+    public Toolbar mToolbar;
 
     protected Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_simple);
+        setContentView(getLayoutResource());
         unbinder = ButterKnife.bind(this);
+    }
+
+    @LayoutRes
+    public int getLayoutResource() {
+        return R.layout.activity_simple;
+    }
+
+    @Override
+    public View getActivityRootView() {
+        return mActivityRootView;
     }
 
     /**
      * Create the named fragment and add its view to the specified container.
-     * If the containerViewId is 0, then the fragment_container_activity will be used.
      * If not null, the specified Bundle will be given to the fragment as args.
      */
     protected Fragment setupFragment(String fragClassName, @IdRes int containerViewId,
@@ -45,9 +52,6 @@ public abstract class SimpleActivity extends BaseActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(fragClassName);
         if (fragment == null) {
             fragment = Fragment.instantiate(this, fragClassName, args);
-            if (containerViewId == 0) {
-                containerViewId = R.id.fragment_container_activity;
-            }
             getSupportFragmentManager().beginTransaction().add(containerViewId, fragment, fragClassName).commit();
         }
         return fragment;
@@ -66,19 +70,19 @@ public abstract class SimpleActivity extends BaseActivity {
 
 //    @Override
 //    public void showToolbar(boolean show) {
-//        toolbar.setVisibility(show ? View.VISIBLE : View.GONE);
+//        mToolbar.setVisibility(show ? View.VISIBLE : View.GONE);
 //    }
 //
 //    protected void setupToolbar(boolean inhibitElevationAdjust) {
-//        toolbar.setTitleTextAppearance(this, R.style.AppTheme_Text_H1);
-//        toolbar.setSubtitleTextColor(ContextCompat.getColor(this, R.color.black));
+//        mToolbar.setTitleTextAppearance(this, R.style.AppTheme_Text_H1);
+//        mToolbar.setSubtitleTextColor(ContextCompat.getColor(this, R.color.black));
 //        if (inhibitElevationAdjust) {
 //            fragmentContainer.setForeground(null);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                toolbar.setElevation(0f);
+//                mToolbar.setElevation(0f);
 //            }
 //        }
-//        setSupportActionBar(toolbar);
+//        setSupportActionBar(mToolbar);
 //    }
 
     protected void setupTitle(String title) {
@@ -88,6 +92,7 @@ public abstract class SimpleActivity extends BaseActivity {
     public void setTitle(int resId) {
         getSupportActionBar().setTitle(resId);
     }
+
     protected void setupHomeUp(boolean homeAsUp) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUp);
     }

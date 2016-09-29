@@ -14,10 +14,6 @@ import com.wolfie.sample.view.activity.BaseActivity.KeyboardVisibility;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * Created by david on 28/09/16.
- */
-
 public abstract class BaseFragment extends Fragment implements BaseUi {
 
     protected Activity mActivity;
@@ -26,7 +22,7 @@ public abstract class BaseFragment extends Fragment implements BaseUi {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        inject();
+        // Normally the inject call would go here
     }
 
     @Override
@@ -34,9 +30,6 @@ public abstract class BaseFragment extends Fragment implements BaseUi {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
     }
-
-
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -105,9 +98,8 @@ public abstract class BaseFragment extends Fragment implements BaseUi {
     public abstract Presenter getPresenter();
 
     /**
-     * On back pressed. The return value decides whether the framework should execute the default back or not For
-     * example the NavigationDrawerFragment prevents the default as it expects back to close the navigation drawer, so
-     * it returns false if drawer is open otherwise true in closed(framework can do its normal)
+     * Should return true, to let the framework handle the back press.
+     * If handled here, then return false.
      */
     public boolean onBackPressed() {
         if (getPresenter() != null) {
@@ -117,8 +109,8 @@ public abstract class BaseFragment extends Fragment implements BaseUi {
     }
 
     /**
-     * On home pressed. The return value decides whether the framework should execute the default home pressed action or
-     * not.
+     * Should return true, to let the framework handle the back press.
+     * If handled here, then return false.
      */
     public boolean onHomeAsUpPressed() {
         if (getPresenter() != null) {
